@@ -120,6 +120,8 @@ defmodule ChromeRemoteInterface.PageSession do
   # ---
 
   def init(url) do
+    IO.inspect("inside INIT")
+
     case ChromeRemoteInterface.Websocket.start_link(url) do
       {:ok, socket} ->
         state = %__MODULE__{
@@ -130,6 +132,7 @@ defmodule ChromeRemoteInterface.PageSession do
         {:ok, state}
 
       {:error, reason} ->
+        IO.inspect("should return reason here")
         {:error, reason}
     end
   end
