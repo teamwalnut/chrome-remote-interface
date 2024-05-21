@@ -120,14 +120,18 @@ defmodule ChromeRemoteInterface.PageSession do
   # ---
 
   def init(url) do
-    {:ok, socket} = ChromeRemoteInterface.Websocket.start_link(url)
+    case ChromeRemoteInterface.Websocket.start_link(url) do
+      {:ok, socket} ->
+        state = %__MODULE__{
+          url: url,
+          socket: socket
+        }
 
-    state = %__MODULE__{
-      url: url,
-      socket: socket
-    }
+        {:ok, state}
 
-    {:ok, state}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   def handle_cast({:cast_command, method, params, from, session_id}, state) do
